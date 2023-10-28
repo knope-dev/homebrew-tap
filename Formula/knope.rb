@@ -8,8 +8,9 @@ class Knope < Formula
 
   bottle do
     root_url "https://github.com/knope-dev/homebrew-tap/releases/download/knope-0.13.0"
-    rebuild 1
-    sha256 cellar: :any_skip_relocation, ventura: "40f08cb7d8d088e90daa2d2153538e73df60e5fe2de23b4ab6453e500f8636c3"
+    rebuild 2
+    sha256 cellar: :any,                 ventura:      "ebcd75c4724244248fe13a63b65eefc5e9577e0b380ec4f5a998c6816555734a"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "26c38dead9bec195b0ac4b02b807141fcfa50525011ca2459d5001914ff150c5"
   end
 
   depends_on "rust" => :build
