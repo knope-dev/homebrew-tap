@@ -1,11 +1,5 @@
-# Knope-dev Knope
+# Knope via Homebrew
 
-## How do I install these formulae?
+`brew install knope-dev/knope/knope`
 
-`brew install knope-dev/knope/<formula>`
-
-Or `brew tap knope-dev/knope` and then `brew install <formula>`.
-
-## Documentation
-
-`brew help`, `man brew` or check [Homebrew's documentation](https://docs.brew.sh).
+Or `brew tap knope-dev/knope` and then `brew install knope`.
