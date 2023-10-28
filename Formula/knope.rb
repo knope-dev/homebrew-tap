@@ -12,6 +12,10 @@ class Knope < Formula
     system "cargo", "install", *std_cargo_args
   end
 
+  bottle do
+    sha256 arm64_sonoma: "a378da8a1704e172915b63fd11405ec0e38f92728d750c886ac6d17bb6b384e7"
+  end
+
   test do
     system "#{bin}/knope", "--help"
   end
