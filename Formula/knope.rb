@@ -7,7 +7,9 @@ class Knope < Formula
   head "https://github.com/apollographql/rover.git", branch: "main"
 
   bottle do
-    sha256 arm64_sonoma: "a378da8a1704e172915b63fd11405ec0e38f92728d750c886ac6d17bb6b384e7"
+    root_url "https://github.com/knope-dev/homebrew-tap/releases/download/knope-0.13.0"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, ventura: "40f08cb7d8d088e90daa2d2153538e73df60e5fe2de23b4ab6453e500f8636c3"
   end
 
   depends_on "rust" => :build
