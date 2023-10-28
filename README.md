@@ -1,5 +1,5 @@
 # Knope via Homebrew
 
-`brew install knope-dev/knope/knope`
+`brew install knope-dev/tap/knope`
 
-Or `brew tap knope-dev/knope` and then `brew install knope`.
+Or `brew tap knope-dev/tap` and then `brew install knope`.
