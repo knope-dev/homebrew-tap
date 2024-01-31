@@ -1,0 +1,26 @@
+on:
+  push:
+    paths:
+      - workflows/update-formula.yml  # Updated automatically when a new Knope version is out
+jobs:
+  update-knope-sha:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4.1.1
+      - name: Download Knope Source
+        run: curl -o source.tgz https://codeload.github.com/knope-dev/knope/tar.gz/refs/tags/v0.13.0
+      - name: Get new SHA
+        run: echo "NEW_SHA=$(shasum -a 256 source.tgz | cut -d ' ' -f 1)" >> $GITHUB_ENV
+      - name: Update Formula
+        run: sed -i "s#^  sha256 .*#  sha256 \"${{ env.NEW_SHA }}\"#" Formula/knope.rb
+      - name: Set up Git
+        run: |
+          git config --global user.name GitHub Actions
+          git config user.email github-actions@github.com
+      - name: Commit back new SHA
+        run: |
+          git add Formula/knope.rb
+          git commit -m "Update knope to ${{ env.NEW_SHA }}"
+          git push
