@@ -9,6 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.1
         with:
+          ref: ${{ github.head.ref }}
           token: ${{ secrets.PAT }}
       - name: Download Knope Source
         run: curl -o source.tgz https://codeload.github.com/knope-dev/knope/tar.gz/refs/tags/v0.13.0
