@@ -5,45 +5,11 @@ on:
       - main
   pull_request:
 jobs:
-  update-sha:
-    runs-on: ubuntu-latest
-    outputs:
-      sha-changed: ${{ steps.check-sha.outputs.changed }}
-    steps:
-     - uses: actions/checkout@v4.1.1
-       with:
-         ref: ${{ github.head_ref }}
-     - name: Download Knope Source
-       run: curl -o source.tgz https://codeload.github.com/knope-dev/knope/tar.gz/refs/tags/v0.13.0
-     - name: Get new SHA
-       run: echo "NEW_SHA=$(shasum -a 256 source.tgz | cut -d ' ' -f 1)" >> $GITHUB_ENV
-     - name: Update Formula
-       id: update-formula
-       run: sed -i "s#^  sha256 .*#  sha256 \"${{ env.NEW_SHA }}\"#" Formula/knope.rb
-     - name: Check if SHA changed
-       id: check-sha
-       run: echo "changed=$(git diff --exit-code Formula/knope.rb > /dev/null && echo no || echo yes)" >> $GITHUB_OUTPUT
-     - name: Commit back new SHA if it changed
-       if: steps.check-sha.outputs.changed == 'yes'
-       run: |
-         git config --global user.name "github-actions[bot]"
-         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-         git add Formula/knope.rb
-         git commit -m "Update SHA to ${{ env.NEW_SHA }}"
-         git push
-     - name: Save formula as artifact
-       uses: actions/upload-artifact@v3
-       with:
-          name: formula
-          path: Formula/knope.rb
-
   test-formula-and-build-bottles:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-13, macos-14]
     runs-on: ${{ matrix.os }}
-    needs:
-      - update-sha
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
@@ -82,9 +48,8 @@ jobs:
   publish-bottles:
     needs:
       - test-formula-and-build-bottles
-      - update-sha
     runs-on: ubuntu-latest
-    if: needs.update-sha.outputs.sha-changed == 'yes'
+    if: contains(github.event.pull_request.labels.*.name, 'pr-pull')
     permissions:
       contents: write
       packages: none

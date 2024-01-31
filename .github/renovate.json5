@@ -6,7 +6,7 @@
       "customType": "regex",
       "fileMatch": [
         "^Formula/knope.rb$",
-        "^.github/workflows/test-and-build.yml$"
+        "^.github/workflows/update-formula.yml$"
       ],
       "matchStrings": [
         "https:\\/\\/github\\.com\\/knope-dev\\/knope\\/archive\\/refs\\/tags\\/v(?<currentValue>.*)\\.tar\\.gz",
