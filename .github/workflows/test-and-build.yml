@@ -8,7 +8,7 @@ jobs:
   update-sha:
     runs-on: ubuntu-latest
     outputs:
-      sha-changed: ${{ steps.check-if-sha-changed.outputs.changed }}
+      sha-changed: ${{ steps.check-sha.outputs.changed }}
     steps:
      - uses: actions/checkout@v4.1.1
      - name: Download Knope Source
@@ -22,7 +22,7 @@ jobs:
        id: check-sha
        run: echo "changed=$(git diff --exit-code Formula/knope.rb > /dev/null && echo no || echo yes)" >> $GITHUB_OUTPUT
      - name: Commit back new SHA if it changed
-       if: steps.check-if-sha-changed.outputs.changed == 'yes'
+       if: steps.check-sha.outputs.changed == 'yes'
        run: |
          git config --global user.name "github-actions[bot]"
          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
