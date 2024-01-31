@@ -2,7 +2,7 @@ class Knope < Formula
   desc "Automate developer tasks, like generating changelogs and updating versions"
   homepage "https://knope-dev.github.io/knope/"
   url "https://github.com/knope-dev/knope/archive/refs/tags/v0.13.4.tar.gz"
-  sha256   "29e229af18db0086fafecac562c4872e0bf27f70d00cc4fec9dee10d5512e3c3"
+  sha256 "29e229af18db0086fafecac562c4872e0bf27f70d00cc4fec9dee10d5512e3c3"
   license "MIT"
   head "https://github.com/apollographql/rover.git", branch: "main"
 
