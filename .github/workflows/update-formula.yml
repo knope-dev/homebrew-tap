@@ -1,7 +1,7 @@
 on:
   push:
     paths:
-      - workflows/update-formula.yml  # Updated automatically when a new Knope version is out
+      - .github/workflows/update-formula.yml  # Updated automatically when a new Knope version is out
 jobs:
   update-knope-sha:
     runs-on: ubuntu-latest
