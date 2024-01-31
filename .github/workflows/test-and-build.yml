@@ -5,8 +5,6 @@ on:
 jobs:
   update-sha:
     runs-on: ubuntu-latest
-    outputs:
-      new_formula: ${{ steps.update-formula.outputs.new_formula }}
     steps:
      - uses: actions/checkout@v4.1.1
      - name: Download Knope Source
@@ -15,9 +13,7 @@ jobs:
        run: echo "NEW_SHA=$(shasum -a 256 source.tgz | cut -d ' ' -f 1)" >> $GITHUB_ENV
      - name: Update Formula
        id: update-formula
-       run: |
-         sed -i "s#^  sha256 .*#  sha256 \"${{ env.NEW_SHA }}\"#" Formula/knope.rb
-         echo "new_formula=$(cat Formula/knope.rb)" >> $GITHUB_OUTPUT
+       run: sed -i "s#^  sha256 .*#  sha256 \"${{ env.NEW_SHA }}\"#" Formula/knope.rb
      - name: Check if SHA changed
        id: check-sha
        run: echo "changed=$(git diff --exit-code Formula/knope.rb > /dev/null && echo no || echo yes)" >> $GITHUB_OUTPUT
@@ -29,6 +25,11 @@ jobs:
          git add Formula/knope.rb
          git commit -m "Update SHA to ${{ env.NEW_SHA }}"
          git push
+     - name: Save formula as artifact
+       uses: actions/upload-artifact@v3
+       with:
+          name: formula
+          path: Formula/knope.rb
 
   test-forumla-and-build-bottles:
     strategy:
@@ -51,7 +52,10 @@ jobs:
           restore-keys: ${{ runner.os }}-rubygems-
 
       - name: Replace Formula with updated version
-        run: echo "${{ needs.update-sha.outputs.new_formula }}" > Formula/knope.rb
+        uses: actions/download-artifact@v2
+        with:
+          name: formula
+          path: Formula
 
       - run: brew test-bot --only-cleanup-before
 
