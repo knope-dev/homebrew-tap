@@ -1,0 +1,19 @@
+{
+  extends: ["config:base"],
+  automerge: true,
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "^knope.rb$"
+      ],
+      "matchStrings": [
+        "https://github.com/knope-dev/knope/archive/refs/tags/v(?<currentValue>.*).tar.gz",
+        "https://github.com/knope-dev/homebrew-tap/releases/download/knope-(?<currentValue>.*)",
+      ],
+      "depNameTemplate": "knope",
+      "datasourceTemplate": "crate",
+      "versioningTemplate": "semver"
+    }
+  ]
+}
