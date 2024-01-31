@@ -24,6 +24,8 @@ jobs:
       - name: Commit back new SHA if it changed
         if: steps.check-sha.outputs.changed == 'yes'
         run: |
+          git config --global user.name GitHub Actions
+          git config user.email github-actions@github.com
           git add Formula/knope.rb
           git commit -m "Update SHA to ${{ env.NEW_SHA }}"
           git push
