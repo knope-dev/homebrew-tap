@@ -1,11 +1,11 @@
 {
-  extends: ["config:base"],
+  extends: ["config:recommended"],
   automerge: true,
   "customManagers": [
     {
       "customType": "regex",
       "fileMatch": [
-        "^knope.rb$"
+        "^Formula/knope.rb$"
       ],
       "matchStrings": [
         "https:\\/\\/github\\.com\\/knope-dev\\/knope\\/archive\\/refs\\/tags\\/v(?<currentValue>.*)\\.tar\\.gz",
