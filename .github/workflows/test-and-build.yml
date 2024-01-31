@@ -23,12 +23,6 @@ jobs:
           key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
           restore-keys: ${{ runner.os }}-rubygems-
 
-      - name: Replace Formula with updated version
-        uses: actions/download-artifact@v2
-        with:
-          name: formula
-          path: Formula
-
       - run: brew test-bot --only-cleanup-before
 
       - run: brew test-bot --only-setup
