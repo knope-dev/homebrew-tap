@@ -17,8 +17,8 @@ jobs:
         run: sed -i "s#^  sha256 .*#  sha256 \"${{ env.NEW_SHA }}\"#" Formula/knope.rb
       - name: Set up Git
         run: |
-          git config --global user.name GitHub Actions
-          git config user.email github-actions@github.com
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - name: Commit back new SHA
         run: |
           git add Formula/knope.rb
