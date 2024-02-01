@@ -47,7 +47,7 @@ jobs:
       - name: Check for label
         id: check-for-label
         run: |
-          LENGTH=$(gh pr view ${{ github.event.number }} --repo knope-dev/homebrew-tap --json labels --jq '.labels[] | select(.name = "pr-pull") | length')
+          LENGTH=$(gh pr view ${{ github.event.number }} --repo knope-dev/homebrew-tap --json labels --jq '.labels[] | select(.name = "release") | length')
           if [ $LENGTH -eq 0 ]; then
               echo "has-label=false" >> $GITHUB_OUTPUT
           else

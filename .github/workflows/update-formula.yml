@@ -29,8 +29,8 @@ jobs:
           git add Formula/knope.rb
           git commit --amend --reuse-message HEAD
           git push --force
-      - name: Label PR to trigger release
+      - name: Open a new PR (since force push closed the first)
         if: steps.check-sha.outputs.changed == 'yes'
-        run: gh pr edit ${{ github.event.number }} --add-label "pr-pull"
+        run: gh pr create --fill --label "release"
         env:
           GH_TOKEN: ${{ secrets.PAT }}
