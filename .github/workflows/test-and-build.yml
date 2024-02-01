@@ -39,11 +39,29 @@ jobs:
           name: bottles
           path: '*.bottle.*'
 
+  check-for-label:
+    runs-on: ubuntu-latest
+    outputs:
+      has-label: ${{ steps.check-for-label.outputs.has-label }}
+    steps:
+      - name: Check for label
+        id: check-for-label
+        run: |
+          LENGTH=$(gh pr view 9 --json labels --jq '.labels[] | select(.name = "pr-pull") | length')
+          if [ $LENGTH -eq 0 ]; then
+              echo "has-label=false" >> $GITHUB_OUTPUT
+          else
+                echo "has-label=true" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
+
   publish-bottles:
     needs:
       - test-formula-and-build-bottles
+      - check-for-label
+    if: needs.check-for-label.outputs.has-label == 'true'
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'pr-pull')
     permissions:
       contents: write
       packages: none
