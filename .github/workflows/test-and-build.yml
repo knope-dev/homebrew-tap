@@ -5,7 +5,27 @@ on:
       - main
   pull_request:
 jobs:
+  check-for-label:
+    runs-on: ubuntu-latest
+    outputs:
+      has-label: ${{ steps.check-for-label.outputs.has-label }}
+    steps:
+      - name: Check for label
+        id: check-for-label
+        run: |
+          LENGTH=$(gh pr view ${{ github.event.number }} --repo knope-dev/homebrew-tap --json labels --jq '.labels[] | select(.name = "release") | length')
+          if [ $LENGTH -eq 0 ]; then
+              echo "has-label=false" >> $GITHUB_OUTPUT
+          else
+                echo "has-label=true" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
+
   test-formula-and-build-bottles:
+    needs:
+      - check-for-label
+    if: needs.check-for-label.outputs.has-label == 'true'
     strategy:
       matrix:
         os: [ubuntu-latest, macos-13, macos-14]
@@ -38,23 +58,6 @@ jobs:
         with:
           name: bottles
           path: '*.bottle.*'
-
-  check-for-label:
-    runs-on: ubuntu-latest
-    outputs:
-      has-label: ${{ steps.check-for-label.outputs.has-label }}
-    steps:
-      - name: Check for label
-        id: check-for-label
-        run: |
-          LENGTH=$(gh pr view ${{ github.event.number }} --repo knope-dev/homebrew-tap --json labels --jq '.labels[] | select(.name = "release") | length')
-          if [ $LENGTH -eq 0 ]; then
-              echo "has-label=false" >> $GITHUB_OUTPUT
-          else
-                echo "has-label=true" >> $GITHUB_OUTPUT
-          fi
-        env:
-          GH_TOKEN: ${{ secrets.PAT }}
 
   publish-bottles:
     needs:
