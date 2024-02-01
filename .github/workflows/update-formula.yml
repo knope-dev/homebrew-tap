@@ -11,6 +11,7 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.PAT }}
+          fetch-depth: 0
       - name: Download Knope Source
         run: curl -o source.tgz https://codeload.github.com/knope-dev/knope/tar.gz/refs/tags/v0.13.0
       - name: Get new SHA
