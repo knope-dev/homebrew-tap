@@ -1,0 +1,36 @@
+name: Update Formula
+on:
+  pull_request:
+    paths:
+      - .github/workflows/update-formula.yml
+jobs:
+  update-sha:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.PAT }}
+      - name: Download Knope Source
+        run: curl -o source.tgz https://codeload.github.com/knope-dev/knope/tar.gz/refs/tags/v0.13.4
+      - name: Get new SHA
+        run: echo "NEW_SHA=$(shasum -a 256 source.tgz | cut -d ' ' -f 1)" >> $GITHUB_ENV
+      - name: Update Formula
+        id: update-formula
+        run: sed -i "s#^  sha256 .*#  sha256 \"${{ env.NEW_SHA }}\"#" Formula/knope.rb
+      - name: Check if SHA changed
+        id: check-sha
+        run: echo "changed=$(git diff --exit-code Formula/knope.rb > /dev/null && echo no || echo yes)" >> $GITHUB_OUTPUT
+      - name: Commit back new SHA if it changed
+        if: steps.check-sha.outputs.changed == 'yes'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Formula/knope.rb
+          git commit --amend --reuse-message HEAD
+          git push --force
+      - name: Label PR to trigger release
+        if: steps.check-sha.outputs.changed == 'yes'
+        run: gh pr edit ${{ github.event.number }} --add-label "pr-pull"
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}

@@ -1,0 +1,95 @@
+name: Build, test, and publish
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+jobs:
+  test-formula-and-build-bottles:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-13, macos-14]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Cache Homebrew Bundler RubyGems
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.set-up-homebrew.outputs.gems-path }}
+          key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
+          restore-keys: ${{ runner.os }}-rubygems-
+
+      - run: brew test-bot --only-cleanup-before
+
+      - run: brew test-bot --only-setup
+
+      - run: brew test-bot --only-tap-syntax
+
+      - run: brew test-bot --only-formulae
+        if: github.event_name == 'pull_request'
+
+      - name: Upload bottles as artifact
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v3
+        with:
+          name: bottles
+          path: '*.bottle.*'
+
+  check-for-label:
+    runs-on: ubuntu-latest
+    outputs:
+      has-label: ${{ steps.check-for-label.outputs.has-label }}
+    steps:
+      - name: Check for label
+        id: check-for-label
+        run: |
+          LENGTH=$(gh pr view ${{ github.event.number }} --repo knope-dev/homebrew-tap --json labels --jq '.labels[] | select(.name = "pr-pull") | length')
+          if [ $LENGTH -eq 0 ]; then
+              echo "has-label=false" >> $GITHUB_OUTPUT
+          else
+                echo "has-label=true" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
+
+  publish-bottles:
+    needs:
+      - test-formula-and-build-bottles
+      - check-for-label
+    if: needs.check-for-label.outputs.has-label == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: none
+      pull-requests: write
+    steps:
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Set up git
+        uses: Homebrew/actions/git-user-config@master
+
+      - name: Pull bottles
+        env:
+          HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }}
+          HOMEBREW_GITHUB_PACKAGES_TOKEN: ${{ github.token }}
+          HOMEBREW_GITHUB_PACKAGES_USER: ${{ github.actor }}
+          PULL_REQUEST: ${{ github.event.pull_request.number }}
+        run: brew pr-pull --debug --tap=$GITHUB_REPOSITORY $PULL_REQUEST
+
+      - name: Push commits
+        uses: Homebrew/actions/git-try-push@master
+        with:
+          token: ${{ github.token }}
+          branch: main
+
+      - name: Delete branch
+        if: github.event.pull_request.head.repo.fork == false
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: git push --delete origin $BRANCH
+
