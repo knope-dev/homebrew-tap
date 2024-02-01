@@ -32,3 +32,5 @@ jobs:
       - name: Label PR to trigger release
         if: steps.check-sha.outputs.changed == 'yes'
         run: gh pr edit ${{ github.event.number }} --add-label "pr-pull"
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
