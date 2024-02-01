@@ -14,10 +14,10 @@ jobs:
         id: check-for-label
         run: |
           LENGTH=$(gh pr view ${{ github.event.number }} --repo knope-dev/homebrew-tap --json labels --jq '.labels[] | select(.name = "release") | length')
-          if [ $LENGTH -eq 0 ]; then
+          if [ -z "$LENGTH" ]; then
               echo "has-label=false" >> $GITHUB_OUTPUT
           else
-                echo "has-label=true" >> $GITHUB_OUTPUT
+              echo "has-label=true" >> $GITHUB_OUTPUT
           fi
         env:
           GH_TOKEN: ${{ secrets.PAT }}
