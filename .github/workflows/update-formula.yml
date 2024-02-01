@@ -26,10 +26,11 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C release
           git add Formula/knope.rb
           git commit --amend --reuse-message HEAD
           git push --force
-      - name: Open a new PR (since force push closed the first)
+      - name: Open a new PR
         if: steps.check-sha.outputs.changed == 'yes'
         run: gh pr create --fill --label "release"
         env:
