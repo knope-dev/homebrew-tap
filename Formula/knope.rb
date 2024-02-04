@@ -4,7 +4,7 @@ class Knope < Formula
   url "https://github.com/knope-dev/knope/archive/refs/tags/v0.14.0.tar.gz"
   sha256 "29e229af18db0086fafecac562c4872e0bf27f70d00cc4fec9dee10d5512e3c3"
   license "MIT"
-  head "https://github.com/apollographql/rover.git", branch: "main"
+  head "https://github.com/knope-dev/knope.git", branch: "main"
 
   bottle do
     root_url "https://github.com/knope-dev/homebrew-tap/releases/download/knope-0.13.4"
