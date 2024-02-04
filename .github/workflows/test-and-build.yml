@@ -55,3 +55,12 @@ jobs:
         with:
           name: bottles
           path: '*.bottle.*'
+
+  trigger-publish: # Publish has to be in a different workflow, so we trigger it here
+    needs: test-formula-and-build-bottles
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger publish
+        run: gh workflow run Publish --repo knope-dev/homebrew-tap --inputs pull_request_number=${{ github.event.number }}
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
