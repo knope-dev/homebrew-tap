@@ -61,6 +61,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger publish
-        run: gh workflow run Publish --repo knope-dev/homebrew-tap --inputs pull_request_number=${{ github.event.number }}
+        run: gh workflow run Publish --repo knope-dev/homebrew-tap -f pull_request_number=${{ github.event.number }}
         env:
           GH_TOKEN: ${{ secrets.PAT }}
