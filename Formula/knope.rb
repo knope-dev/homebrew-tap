@@ -1,8 +1,8 @@
 class Knope < Formula
   desc "Automate developer tasks, like generating changelogs and updating versions"
   homepage "https://knope-dev.github.io/knope/"
-  url "https://github.com/knope-dev/knope/archive/refs/tags/v0.14.0.tar.gz"
-  sha256 "fb7e69932afa8290551a1bfe26ed6e74f1655124f9e3d41377c88650a00395ea"
+  url "https://github.com/knope-dev/knope/archive/refs/tags/v0.14.1.tar.gz"
+  sha256 "c9e3ef0539f31d711ef30192e1ee080352cebe537a1ebdfb04d895a4c3a0bf0c"
   license "MIT"
   head "https://github.com/knope-dev/knope.git", branch: "main"
 
