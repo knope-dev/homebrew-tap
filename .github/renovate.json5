@@ -8,9 +8,9 @@
         "^.github/workflows/update-formula.yml$"
       ],
       "matchStrings": [
-        "https:\\/\\/github\\.com\\/knope-dev\\/knope\\/archive\\/refs\\/tags\\/v(?<currentValue>.*)\\.tar\\.gz",
+        "https:\\/\\/github\\.com\\/knope-dev\\/knope\\/archive\\/refs\\/tags\\/knope\\/v(?<currentValue>.*)\\.tar\\.gz",
         "https:\\/\\/github\\.com\\/knope-dev\\/homebrew-tap\\/releases\\/download\\/knope-(?<currentValue>.*)",
-        "https:\\/\\/codeload\\.github\\.com\\/knope-dev\\/knope\\/tar\\.gz\\/refs\\/tags\\/v(?<currentValue>.*)"
+        "https:\\/\\/codeload\\.github\\.com\\/knope-dev\\/knope\\/tar\\.gz\\/refs\\/tags\\/knope\\/v(?<currentValue>.*)"
       ],
       "depNameTemplate": "knope",
       "datasourceTemplate": "crate",
