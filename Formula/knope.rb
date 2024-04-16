@@ -17,7 +17,7 @@ class Knope < Formula
   depends_on "zlib"
 
   def install
-    system "cargo", "install", *std_cargo_args
+    system "cargo", "install", *std_cargo_args(path: "crates/knope")
   end
 
   test do
