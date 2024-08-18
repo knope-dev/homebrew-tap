@@ -21,7 +21,7 @@ jobs:
         run: sed -i "s#^  sha256 .*#  sha256 \"${{ env.NEW_SHA }}\"#" Formula/knope.rb
       - name: Check if SHA changed
         id: check-sha
-        run: echo "changed=$(git diff --exit-code Formula/knope.rb > /dev/null && echo no || echo yes)" >> $GITHUB_OUTPUT
+        run: echo "changed=$(git diff --exit-code Formula/knope.rb > /dev/null && echo no || echo yes)" >> "$GITHUB_OUTPUT"
       - name: Commit back new SHA if it changed
         if: steps.check-sha.outputs.changed == 'yes'
         run: |
