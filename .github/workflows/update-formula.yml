@@ -15,7 +15,7 @@ jobs:
       - name: Download Knope Source
         run: curl -o source.tgz https://codeload.github.com/knope-dev/knope/tar.gz/refs/tags/knope/v0.16.2
       - name: Get new SHA
-        run: echo "NEW_SHA=$(shasum -a 256 source.tgz | cut -d ' ' -f 1)" >> $GITHUB_ENV
+        run: echo "NEW_SHA=$(shasum -a 256 source.tgz | cut -d ' ' -f 1)" >> "$GITHUB_ENV"
       - name: Update Formula
         id: update-formula
         run: sed -i "s#^  sha256 .*#  sha256 \"${{ env.NEW_SHA }}\"#" Formula/knope.rb
