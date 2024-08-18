@@ -12,9 +12,9 @@ jobs:
         run: |
           LENGTH=$(gh pr view ${{ github.event.number }} --repo knope-dev/homebrew-tap --json labels --jq '.labels[] | select(.name = "release") | length')
           if [ -z "$LENGTH" ]; then
-              echo "has-label=false" >> $GITHUB_OUTPUT
+              echo "has-label=false" >> "$GITHUB_OUTPUT"
           else
-              echo "has-label=true" >> $GITHUB_OUTPUT
+              echo "has-label=true" >> "$GITHUB_OUTPUT"
           fi
         env:
           GH_TOKEN: ${{ secrets.PAT }}
