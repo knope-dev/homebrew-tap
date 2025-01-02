@@ -53,7 +53,7 @@ jobs:
         if: always() && github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
         with:
-          name: bottles_${{ runner.os }}
+          name: bottles_${{ matrix.os }}
           path: '*.bottle.*'
 
   trigger-publish: # Publish has to be in a different workflow, so we trigger it here
