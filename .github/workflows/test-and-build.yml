@@ -1,6 +1,12 @@
 name: Build and test
 on:
   pull_request:
+  workflow_dispatch:
+    inputs:
+      pull_request_number:
+        description: 'Pull request number'
+        required: true
+        type: number
 jobs:
   check-for-label:
     runs-on: ubuntu-latest
@@ -12,7 +18,8 @@ jobs:
       - name: Check for label
         id: check-for-label
         run: |
-          LENGTH=$(gh pr view ${{ github.event.number }} --repo knope-dev/homebrew-tap --json labels --jq '.labels[] | select(.name = "release") | length')
+          PR_NUMBER=${{ github.event.number || inputs.pull_request_number }}
+          LENGTH=$(gh pr view $PR_NUMBER --repo knope-dev/homebrew-tap --json labels --jq '.labels[] | select(.name = "release") | length')
           if [ -z "$LENGTH" ]; then
               echo "has-label=false" >> "$GITHUB_OUTPUT"
           else
@@ -65,6 +72,6 @@ jobs:
       actions: write
     steps:
       - name: Trigger publish
-        run: gh workflow run Publish --repo knope-dev/homebrew-tap -f pull_request_number=${{ github.event.number }}
+        run: gh workflow run Publish --repo knope-dev/homebrew-tap -f pull_request_number=${{ github.event.number || inputs.pull_request_number }}
         env:
           GH_TOKEN: ${{ github.token }}

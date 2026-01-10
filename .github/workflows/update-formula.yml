@@ -9,6 +9,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      actions: write
     steps:
       - uses: actions/checkout@v6.0.1
         with:
@@ -36,6 +37,14 @@ jobs:
           git push --force --set-upstream origin release
       - name: Open a new PR
         if: steps.check-sha.outputs.changed == 'yes'
-        run: gh pr create --fill --label "release"
+        id: create-pr
+        run: |
+          PR_URL=$(gh pr create --fill --label "release")
+          echo "PR_NUMBER=$(echo $PR_URL | grep -o '[0-9]*$')" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: Trigger test-and-build workflow
+        if: steps.check-sha.outputs.changed == 'yes'
+        run: gh workflow run "Build and test" --repo knope-dev/homebrew-tap -f pull_request_number=${{ steps.create-pr.outputs.PR_NUMBER }}
         env:
           GH_TOKEN: ${{ github.token }}
