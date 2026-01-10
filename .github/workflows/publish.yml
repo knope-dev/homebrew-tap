@@ -13,7 +13,7 @@ jobs:
       packages: none
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v6.0.1
         with:
           ref: main
 
@@ -40,4 +40,4 @@ jobs:
       - name: Delete branch
         run: gh pr close ${{ github.event.inputs.pull_request_number }} --delete-branch
         env:
-          GH_TOKEN: ${{ secrets.PAT }}
+          GH_TOKEN: ${{ github.token }}

@@ -4,6 +4,8 @@ on:
 jobs:
   check-for-label:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
     outputs:
       has-label: ${{ steps.check-for-label.outputs.has-label }}
     steps:
@@ -17,7 +19,7 @@ jobs:
               echo "has-label=true" >> "$GITHUB_OUTPUT"
           fi
         env:
-          GH_TOKEN: ${{ secrets.PAT }}
+          GH_TOKEN: ${{ github.token }}
 
   test-formula-and-build-bottles:
     needs:
@@ -34,7 +36,7 @@ jobs:
 
       - name: Cache Homebrew Bundler RubyGems
         id: cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ steps.set-up-homebrew.outputs.gems-path }}
           key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
@@ -51,7 +53,7 @@ jobs:
 
       - name: Upload bottles as artifact
         if: always() && github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: bottles_${{ matrix.os }}
           path: '*.bottle.*'
@@ -59,8 +61,10 @@ jobs:
   trigger-publish: # Publish has to be in a different workflow, so we trigger it here
     needs: test-formula-and-build-bottles
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
     steps:
       - name: Trigger publish
         run: gh workflow run Publish --repo knope-dev/homebrew-tap -f pull_request_number=${{ github.event.number }}
         env:
-          GH_TOKEN: ${{ secrets.PAT }}
+          GH_TOKEN: ${{ github.token }}
