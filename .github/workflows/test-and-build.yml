@@ -43,7 +43,7 @@ jobs:
 
       - name: Checkout PR
         run: |
-          cd $(brew --repository knope-dev/homebrew-tap)
+          cd "$(brew --repository knope-dev/homebrew-tap)"
           git fetch origin pull/${{ github.event.number || inputs.pull_request_number }}/head
           git checkout FETCH_HEAD
 
