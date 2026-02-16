@@ -13,7 +13,7 @@ jobs:
           token: ${{ secrets.PAT }}
           fetch-depth: 0
       - name: Download Knope Source
-        run: curl -o source.tgz https://codeload.github.com/knope-dev/knope/tar.gz/refs/tags/knope/v0.22.2
+        run: curl -o source.tgz https://codeload.github.com/knope-dev/knope/tar.gz/refs/tags/knope/v0.22.3
       - name: Get new SHA
         run: echo "NEW_SHA=$(shasum -a 256 source.tgz | cut -d ' ' -f 1)" >> "$GITHUB_ENV"
       - name: Update Formula
