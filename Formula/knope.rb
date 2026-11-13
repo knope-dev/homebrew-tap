@@ -7,8 +7,9 @@ class Knope < Formula
   head "https://github.com/knope-dev/knope.git", branch: "main"
 
   bottle do
-    root_url "https://github.com/knope-dev/homebrew-tap/releases/download/knope-0.23.2"
-    sha256 cellar: :any, x86_64_linux: "b2763f250375b237e2df220949aca9910871a0a60d0f2f24c58795d308091716"
+    root_url "https://github.com/knope-dev/homebrew-tap/releases/download/knope-0.24.0"
+    sha256 cellar: :any, arm64_sequoia: "d0040ae113a671037ebc955b8c473850e5727d3a0aa92cb9e31bd523deef7a88"
+    sha256 cellar: :any, x86_64_linux:  "07e8b97ec0651f9c24e56c0466cad7420e4ce27553cd9425545052c12083c763"
   end
 
   depends_on "rust" => :build
